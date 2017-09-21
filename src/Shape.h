@@ -5,7 +5,7 @@
 #ifndef GAMEOFLIFE_SHAPE_H
 #define GAMEOFLIFE_SHAPE_H
 
-#include "Cimg.h"
+#include "CImg.h"
 #include <vector>
 #include <math.h>
 

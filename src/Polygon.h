@@ -4,7 +4,7 @@
 #include "Point.h"
 #include <iostream>
 #include <vector>
-#include "Cimg.h"
+#include "CImg.h"
 
 using namespace std;
 

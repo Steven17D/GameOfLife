@@ -1,4 +1,4 @@
-#include <Windows.h>
+#include <windows.h>
 #include <iostream>
 #include "GameBoard.h"
 #include "mingw.mutex.h"
