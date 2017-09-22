@@ -60,6 +60,7 @@ void GameBoard::operator()(unsigned int x, unsigned int y, bool value) {
 
 void GameBoard::next() {
     Grid nextBoard(board);
+    // TODO split work to threads
     for (unsigned int x = 0; x < board.size(); x++){
         for (unsigned int y = 0; y < board[x].size(); y++) {
             int liveNeighbors = countLiveNeighbors(x, y);
