@@ -8,96 +8,26 @@
 #include "GameBoard.h"
 
 struct Patterns {
-    const Grid glider = {
-            {DEAD, LIVE, DEAD},
-            {DEAD, LIVE, LIVE},
-            {LIVE, DEAD, LIVE}
-    };
+    const static Grid glider;
+    const static Grid queenBeeShuttle;
 
-    const Grid queenBeeShuttle = {
-            {LIVE, LIVE, DEAD, DEAD},
-            {DEAD, DEAD, LIVE, DEAD},
-            {DEAD, DEAD, DEAD, LIVE},
-            {DEAD, DEAD, DEAD, LIVE},
-            {DEAD, DEAD, DEAD, LIVE},
-            {DEAD, DEAD, LIVE, DEAD},
-            {LIVE, LIVE, DEAD, DEAD}
-    };
+    const static Grid objectLightWeight;
+    const static Grid objectMediumWeight;
+    const static Grid objectHeavyWeight;
 
-    const Grid objectLightWeight = {
-            {LIVE, DEAD, DEAD, LIVE, DEAD},
-            {DEAD, DEAD, DEAD, DEAD, LIVE},
-            {LIVE, DEAD, DEAD, DEAD, LIVE},
-            {DEAD, LIVE, LIVE, LIVE, LIVE}
-    };
+    const static Grid blinker;
+    const static Grid toad;
 
-    const Grid objectMediumWeight = {
-            {DEAD, DEAD, LIVE, DEAD, DEAD, DEAD},
-            {LIVE, DEAD, DEAD, DEAD, LIVE, DEAD},
-            {DEAD, DEAD, DEAD, DEAD, DEAD, LIVE},
-            {LIVE, DEAD, DEAD, DEAD, DEAD, LIVE},
-            {DEAD, LIVE, LIVE, LIVE, LIVE, LIVE}
-    };
+    const static Grid oscillator;
+    const static Grid prettyOscillator;
+    const static Grid tumbler;
+    const static Grid gosperGliderGun;
 
-    const Grid objectHeavyWeight = {
-            {DEAD, DEAD, LIVE, LIVE, DEAD, DEAD, DEAD},
-            {LIVE, DEAD, DEAD, DEAD, DEAD, LIVE, DEAD},
-            {DEAD, DEAD, DEAD, DEAD, DEAD, DEAD, LIVE},
-            {LIVE, DEAD, DEAD, DEAD, DEAD, DEAD, LIVE},
-            {DEAD, LIVE, LIVE, LIVE, LIVE, LIVE, LIVE}
-    };
-
-    const Grid blinker = {
-            {LIVE, LIVE, LIVE}
-    };
-
-    const Grid toad = {
-            {DEAD, LIVE, LIVE, LIVE},
-            {LIVE, LIVE, LIVE, DEAD}
-    };
-
-    const Grid oscillator = {
-            {LIVE, LIVE, LIVE, LIVE, LIVE, LIVE, LIVE, LIVE, LIVE, LIVE}
-    };
-
-    const Grid prettyOscillator = {
-            {DEAD, LIVE, DEAD},
-            {LIVE, LIVE, LIVE},
-            {LIVE, DEAD, LIVE},
-            {LIVE, LIVE, LIVE},
-            {DEAD, LIVE, DEAD},
-    };
-
-    const Grid block = {
-            {LIVE, LIVE},
-            {LIVE, LIVE}
-    };
-
-    const Grid beehive = {
-            {DEAD, LIVE, DEAD},
-            {LIVE, DEAD, LIVE},
-            {LIVE, DEAD, LIVE},
-            {DEAD, LIVE, DEAD}
-    };
-
-    const Grid boat = {
-            {DEAD, LIVE, DEAD},
-            {LIVE, DEAD, LIVE},
-            {DEAD, LIVE, LIVE}
-    };
-
-    const Grid ship = {
-            {LIVE, LIVE, DEAD},
-            {LIVE, DEAD, LIVE},
-            {DEAD, LIVE, LIVE}
-    };
-
-    const Grid loaf = {
-            {DEAD, LIVE, LIVE, DEAD},
-            {LIVE, DEAD, DEAD, LIVE},
-            {DEAD, LIVE, DEAD, LIVE},
-            {DEAD, DEAD, LIVE, DEAD}
-    };
+    const static Grid block;
+    const static Grid beehive;
+    const static Grid boat;
+    const static Grid ship;
+    const static Grid loaf;
 };
 
 #endif //GAMEOFLIFE_PATTERNS_H

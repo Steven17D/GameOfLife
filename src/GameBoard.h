@@ -18,7 +18,8 @@ typedef std::vector<std::vector<bool>> Grid;
 class GameBoard {
 public:
     GameBoard(unsigned short width, unsigned short height);
-    ~GameBoard();
+
+    unsigned int getGeneration() const;
 
     void draw(cimg_library::CImg<unsigned char>& canvas, const unsigned char color[3]);
     void next();
@@ -30,15 +31,19 @@ public:
 
     void initFull();
     void initRandom();
+    void initPattern(Grid pattern, Point location, bool normalize = true);
 
 private:
     Grid board;
     unsigned short width;
     unsigned short height;
+    unsigned int generation = 0;
 
     int countLiveNeighbors(unsigned int x, unsigned int y);
     bool is_onBoard(unsigned int x, unsigned int y);
-    void insertPattern(Point location, Grid pattern);
+    void insertPattern(Grid pattern, Point location);
+    void normalizePattern(Grid& pattern);
+    void getPatternSize(const Grid pattern, unsigned int& patternWidth, unsigned int& patternHeight);
 };
 
 

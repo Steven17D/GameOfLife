@@ -3,12 +3,13 @@ project(GameOfLife)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wreorder")
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -pthread")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pthread -Wreorder")
 #set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
-set(SOURCE_FILES src/main.cpp
+set(SOURCE_FILES
+        src/main.cpp src/Common.hpp
         src/CImg.h
         src/mingw.thread.h src/mingw.mutex.h
         src/GameBoard.h src/GameBoard.cpp
@@ -17,6 +18,8 @@ set(SOURCE_FILES src/main.cpp
         src/Circle.h src/Circle.cpp
         src/Polygon.h src/Polygon.cpp
         src/Quadrangle.h src/Quadrangle.cpp
-        src/Patterns.h)
+        src/Patterns.h src/Patterns.cpp
+#        src/Stopwatch.cpp src/Stopwatch.h
+        )
 
 add_executable(GameOfLife ${SOURCE_FILES})

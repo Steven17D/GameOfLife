@@ -15,7 +15,9 @@ GameBoard::GameBoard(unsigned short width, unsigned short height) :
         width(width), height(height),
         board(width, std::vector<bool>(height, DEAD)) {}
 
-GameBoard::~GameBoard() {}
+unsigned int GameBoard::getGeneration() const {
+    return generation;
+}
 
 void GameBoard::draw(cimg_library::CImg<unsigned char>& canvas, const unsigned char color[3]) {
     unsigned int wCount = width, hCount = height;
@@ -76,6 +78,7 @@ void GameBoard::next() {
     }
 
     board = nextBoard;
+    generation++;
 }
 
 int GameBoard::countLiveNeighbors(unsigned int x, unsigned int y) {
@@ -115,16 +118,15 @@ void GameBoard::initRandom() {
     }
 }
 
-void GameBoard::insertPattern(Point location, Grid pattern) {
-    unsigned int patternWidth = pattern.size();
-    unsigned int patternHeight = 0;
+void GameBoard::initPattern(Grid pattern, Point location, bool normalize) {
+    if (normalize)
+        normalizePattern(pattern);
+    insertPattern(pattern, location);
+}
 
-    for (auto row : pattern){
-        unsigned int rowWidth = row.size();
-        if (rowWidth > patternHeight){
-            patternHeight = row.size();
-        }
-    }
+void GameBoard::insertPattern(Grid pattern, Point location) {
+    unsigned int patternWidth, patternHeight;
+    getPatternSize(pattern, patternWidth, patternHeight);
 
     location.shift((0 - (int)patternWidth) / 2, (0 - (int)patternHeight) / 2);
 
@@ -134,6 +136,40 @@ void GameBoard::insertPattern(Point location, Grid pattern) {
                 board[location.getX() + x][location.getY() + y] = pattern[x][y];
             else
                 throw std::out_of_range("Patter is not on the board");
+        }
+    }
+}
+
+void GameBoard::normalizePattern(Grid& pattern) {
+    unsigned int patternWidth, patternHeight;
+    getPatternSize(pattern, patternWidth, patternHeight);
+
+    Grid newPattern = std::vector<std::vector<bool>>(patternHeight, std::vector<bool>(patternWidth, DEAD));
+
+    // Rotate by 90 degrees
+    unsigned int newColumn, newRow = 0;
+    for (unsigned int oldColumn = patternHeight - 1; (int)oldColumn >= 0; oldColumn--) {
+        newColumn = 0;
+        for (unsigned int oldRow = 0; oldRow < patternWidth; oldRow++) {
+            newPattern[newRow][newColumn] = pattern[oldRow][oldColumn];
+            newColumn++;
+        }
+        newRow++;
+    }
+
+    std::reverse(newPattern.begin(), newPattern.end());
+
+    pattern = newPattern;
+}
+
+void GameBoard::getPatternSize(const Grid pattern, unsigned int &patternWidth, unsigned int &patternHeight) {
+    patternWidth = pattern.size();
+    patternHeight = 0;
+
+    for (auto row : pattern){
+        unsigned int rowWidth = row.size();
+        if (rowWidth > patternHeight){
+            patternHeight = row.size();
         }
     }
 }
