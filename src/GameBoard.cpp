@@ -12,8 +12,8 @@
 using namespace cimg_library;
 
 GameBoard::GameBoard(unsigned short width, unsigned short height) :
-        width(width), height(height),
-        board(width, std::vector<bool>(height, DEAD)) {}
+        board(width, std::vector<bool>(height, DEAD)),
+        width(width), height(height) {}
 
 unsigned int GameBoard::getGeneration() const {
     return generation;

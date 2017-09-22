@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.7)
 project(GameOfLife)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread -Wreorder")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -pthread -Wreorder")
-#set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -static-libgcc -static-libstdc++")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall -static-libgcc -static-libstdc++")
 
 set(SOURCE_FILES
         src/main.cpp src/Common.hpp
@@ -19,7 +19,7 @@ set(SOURCE_FILES
         src/Polygon.h src/Polygon.cpp
         src/Quadrangle.h src/Quadrangle.cpp
         src/Patterns.h src/Patterns.cpp
-#        src/Stopwatch.cpp src/Stopwatch.h
+        src/Stopwatch.cpp src/Stopwatch.h
         )
 
 add_executable(GameOfLife ${SOURCE_FILES})
