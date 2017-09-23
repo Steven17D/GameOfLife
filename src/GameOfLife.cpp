@@ -65,9 +65,9 @@ void GameOfLife::showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char>
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
                     ("Gen: " + std::to_string(gameBoard.getGeneration())).c_str(), purple, black, 1, fontSize);
     drawLocation.shift(0, fontSize + textPaddingSize);
-    
-    unsigned int realFps;
 
+    // TODO change real fps calculation to avg per second
+    unsigned int realFps;
     unsigned int secondsPassed = (unsigned int) std::chrono::duration_cast<std::chrono::seconds>(stopwatch.getDuration()).count();
     unsigned int framesPassed = gameBoard.getGeneration();
     realFps = framesPassed / (secondsPassed < 1 ? 1 : secondsPassed );
