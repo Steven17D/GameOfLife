@@ -6,6 +6,7 @@
 #define GAMEOFLIFE_GAMEOFLIFE_H
 
 #include <sstream>
+#include <map>
 #include "GameController.h"
 #include "Stopwatch.h"
 #include "GameBoard.h"
@@ -19,12 +20,16 @@ public:
 
 private:
     void showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char> &image, unsigned short fps, Stopwatch stopwatch);
+    void drawControllers(cimg_library::CImg<unsigned char> &image, Point drawLocation,
+                         std::map<std::string, std::string> controllers, const unsigned int fontSize = 26,
+                         const unsigned int textPaddingSize = 4);
 
     Stopwatch stopwatch;
     cimg_library::CImgDisplay imgDisplay;
     unsigned short wCount, hCount;
     GameBoard gameBoard;
     unsigned short fps;
+
 };
 
 

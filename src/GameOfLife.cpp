@@ -2,7 +2,6 @@
 // Created by Steven on 9/22/2017.
 //
 
-#include <map>
 #include "GameOfLife.h"
 #include "Common.hpp"
 
@@ -33,8 +32,9 @@ void GameOfLife::start() {
 
         if (!stopwatch.isStopped())
             gameBoard.next();
-        
+
         imgDisplay.display(image);
+        // TODO switch to sleep_until
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / fps));
     } while (!imgDisplay.is_closed());
 
@@ -58,13 +58,12 @@ void GameOfLife::showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char>
                fillString(std::to_string(seconds), 2, '0') << ":" <<
                fillString(std::to_string(milliseconds), 3, '0');
 
-    // TODO Make better info presentation
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
-                    timeString.str().c_str(), purple, black, 1, 26);
+                    timeString.str().c_str(), purple, black, 1, fontSize);
     drawLocation.shift(0, fontSize + textPaddingSize);
 
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
-                    ("Gen: " + std::to_string(gameBoard.getGeneration())).c_str(), purple, black, 1, 26);
+                    ("Gen: " + std::to_string(gameBoard.getGeneration())).c_str(), purple, black, 1, fontSize);
     drawLocation.shift(0, fontSize + textPaddingSize);
     
     unsigned int realFps;
@@ -76,41 +75,46 @@ void GameOfLife::showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char>
 
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
                     ("FPS: " + std::to_string(fps) + " (" + std::to_string(realFps) + ")").c_str(),
-                    purple, black, 1, 26);
+                    purple, black, 1, fontSize);
     drawLocation.shift(0, fontSize + textPaddingSize);
 
     if (stopwatch.isStopped()) {
-        image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(), "Paused", purple, black, 1, 26);
+        image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(), "Paused", purple, black, 1, fontSize);
         drawLocation.shift(0, fontSize + textPaddingSize);
     }
 
     std::map<std::string, std::string> controllers {
-            {"FPS UP",       "num+"},
-            {"FPS DOWN",     "num-"},
-            {"STOP / START", "space / enter"},
-            {"EXIT",         "esc / q"},
+            {"FPS UP",       "NUM+"},
+            {"FPS DOWN",     "NUM-"},
+            {"STOP/START",   "SPACE"},
+            {"EXIT",         "ESC"},
     };
 
+    drawControllers(image, drawLocation, controllers, fontSize, textPaddingSize);
+}
+
+void GameOfLife::drawControllers(cimg_library::CImg<unsigned char> &image, Point drawLocation,
+                                 std::map<std::string, std::string> controllers, const unsigned int fontSize, const unsigned int textPaddingSize) {
+    const unsigned short smallFontSize = (const unsigned short) (const unsigned int) (fontSize * 0.7f);
+    // Draw title
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
-                    std::string("Control:").c_str(), purple, black, 1, 26);
-    drawLocation.shift(0, fontSize + textPaddingSize);
+                    std::string("Control:").c_str(), purple, black, 1, fontSize);
+    drawLocation.shift(16, fontSize + textPaddingSize);
 
-    Point controllersLocation(drawLocation);
-    controllersLocation.shift(32, 0);
-
+    // Draw the controllers on real image
     for (auto controller : controllers) {
-        image.draw_text((const int) controllersLocation.getX(),
-                        (const int) controllersLocation.getY(),
+        image.draw_text((const int) drawLocation.getX(),
+                        (const int) drawLocation.getY(),
                         std::string(controller.first).c_str(),
-                        purple, black, 1, 26);
+                        purple, black, 1, smallFontSize);
 
-        image.draw_text((const int) controllersLocation.getX() + 128 + 48,
-                        (const int) controllersLocation.getY(),
+        image.draw_text((const int) drawLocation.getX() + 128,
+                        (const int) drawLocation.getY(),
                         std::string(controller.second).c_str(),
-                        purple, black, 1, 26);
-
-        controllersLocation.shift(0, fontSize + textPaddingSize);
+                        purple, black, 1, smallFontSize);
+        drawLocation.shift(0, smallFontSize + textPaddingSize);
     }
+
 
 }
 
