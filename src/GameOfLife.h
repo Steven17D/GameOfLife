@@ -19,16 +19,18 @@ public:
     void start();
 
 private:
-    void showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char> &image, unsigned short fps, Stopwatch stopwatch);
     void drawControllers(cimg_library::CImg<unsigned char> &image, Point drawLocation,
-                         std::map<std::string, std::string> controllers, const unsigned int fontSize = 26,
-                         const unsigned int textPaddingSize = 4);
+                         std::map<std::string, std::string> controllers, unsigned short fontSize = 26,
+                         unsigned short textPaddingSize = 4);
+    void showInfo(const GameBoard &gameBoard, cimg_library::CImg<unsigned char> &image);
+    void frameRateCounter(bool &threadAlive);
 
     Stopwatch stopwatch;
     cimg_library::CImgDisplay imgDisplay;
     unsigned short wCount, hCount;
     GameBoard gameBoard;
     unsigned short fps;
+    double realFps;
 
 };
 

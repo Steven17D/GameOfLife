@@ -24,10 +24,15 @@ void GameOfLife::start() {
     gameController.start();
     stopwatch.start();
 
+    std::thread frameRateCounterThread(&GameOfLife::frameRateCounter, this, std::ref(threadAlive));
+    frameRateCounterThread.detach();
+
     do {
-        cimg_library::CImg<unsigned char> image((const unsigned int) imgDisplay.width(), (const unsigned int) imgDisplay.height(), 1, 3, 1);
+        cimg_library::CImg<unsigned char> image((const unsigned int) imgDisplay.width(),
+                                                (const unsigned int) imgDisplay.height(),
+                                                1, 3, 1);
         gameBoard.draw(image, purple);
-        showInfo(gameBoard, image, fps, stopwatch);
+        showInfo(gameBoard, image);
         if (showCenter) image.draw_circle(imgDisplay.width() / 2, imgDisplay.height() / 2, 1, red);
 
         if (!stopwatch.isStopped())
@@ -41,7 +46,7 @@ void GameOfLife::start() {
     threadAlive = false;
 }
 
-void GameOfLife::showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char>& image, unsigned short fps, Stopwatch stopwatch) {
+void GameOfLife::showInfo(const GameBoard &gameBoard, cimg_library::CImg<unsigned char> &image) {
     Point drawLocation(10, 10);
     const unsigned short
             fontSize = 26,
@@ -66,15 +71,9 @@ void GameOfLife::showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char>
                     ("Gen: " + std::to_string(gameBoard.getGeneration())).c_str(), purple, black, 1, fontSize);
     drawLocation.shift(0, fontSize + textPaddingSize);
 
-    // TODO change real fps calculation to avg per second
-    unsigned int realFps;
-    unsigned int secondsPassed = (unsigned int) std::chrono::duration_cast<std::chrono::seconds>(stopwatch.getDuration()).count();
-    unsigned int framesPassed = gameBoard.getGeneration();
-    realFps = framesPassed / (secondsPassed < 1 ? 1 : secondsPassed );
-    
-
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
-                    ("FPS: " + std::to_string(fps) + " (" + std::to_string(realFps) + ")").c_str(),
+                    ("FPS: " + std::to_string(fps) +
+                            " (" + std::to_string((unsigned short) realFps) + ")").c_str(),
                     purple, black, 1, fontSize);
     drawLocation.shift(0, fontSize + textPaddingSize);
 
@@ -94,8 +93,9 @@ void GameOfLife::showInfo(GameBoard gameBoard, cimg_library::CImg<unsigned char>
 }
 
 void GameOfLife::drawControllers(cimg_library::CImg<unsigned char> &image, Point drawLocation,
-                                 std::map<std::string, std::string> controllers, const unsigned int fontSize, const unsigned int textPaddingSize) {
-    const unsigned short smallFontSize = (const unsigned short) (const unsigned int) (fontSize * 0.7f);
+                                 std::map<std::string, std::string> controllers, const unsigned short fontSize,
+                                 const unsigned short textPaddingSize) {
+    const auto smallFontSize = (const unsigned short) (fontSize * 0.7f);
     // Draw title
     image.draw_text((const int) drawLocation.getX(), (const int) drawLocation.getY(),
                     std::string("Control:").c_str(), purple, black, 1, fontSize);
@@ -114,7 +114,21 @@ void GameOfLife::drawControllers(cimg_library::CImg<unsigned char> &image, Point
                         purple, black, 1, smallFontSize);
         drawLocation.shift(0, smallFontSize + textPaddingSize);
     }
-
-
 }
 
+void GameOfLife::frameRateCounter(bool &threadAlive) {
+    Stopwatch threadStopwatch;
+    threadStopwatch.start();
+    unsigned int millisecondsPassed;
+    unsigned int framesPassed = gameBoard.getGeneration(), currentFrame;
+    while (threadAlive) {
+        millisecondsPassed = (unsigned int) std::chrono::duration_cast<std::chrono::milliseconds>(threadStopwatch.getDuration()).count();
+        millisecondsPassed = millisecondsPassed < 1 ? 1 : millisecondsPassed;
+        threadStopwatch.reset();
+        currentFrame = gameBoard.getGeneration();
+        realFps = (currentFrame - framesPassed) / (millisecondsPassed / 1000.0);
+        std::cout << currentFrame << ", " << framesPassed << ", " << millisecondsPassed / 1000.0 << std::endl;
+        framesPassed = currentFrame;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
+}
