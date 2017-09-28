@@ -27,7 +27,11 @@ void GameOfLife::start() {
     std::thread frameRateCounterThread(&GameOfLife::frameRateCounter, this, std::ref(threadAlive));
     frameRateCounterThread.detach();
 
+    Stopwatch autoCorrectStopwatch;
+    autoCorrectStopwatch.start();
+
     do {
+        autoCorrectStopwatch.reset();
         cimg_library::CImg<unsigned char> image((const unsigned int) imgDisplay.width(),
                                                 (const unsigned int) imgDisplay.height(),
                                                 1, 3, 1);
@@ -39,8 +43,10 @@ void GameOfLife::start() {
             gameBoard.next();
 
         imgDisplay.display(image);
-        // TODO switch to sleep_until
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / fps));
+
+        long long int millisecondsCount = (1000 / fps) - std::chrono::duration_cast<std::chrono::milliseconds>(autoCorrectStopwatch.getDuration()).count();
+        if (millisecondsCount > 1)
+            std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsCount));
     } while (!imgDisplay.is_closed());
 
     threadAlive = false;
@@ -127,7 +133,6 @@ void GameOfLife::frameRateCounter(bool &threadAlive) {
         threadStopwatch.reset();
         currentFrame = gameBoard.getGeneration();
         realFps = (currentFrame - framesPassed) / (millisecondsPassed / 1000.0);
-        std::cout << currentFrame << ", " << framesPassed << ", " << millisecondsPassed / 1000.0 << std::endl;
         framesPassed = currentFrame;
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
