@@ -20,6 +20,7 @@ void Stopwatch::stop() {
 
 void Stopwatch::reset() {
     duration = std::chrono::high_resolution_clock::duration::zero();
+    startTime = std::chrono::high_resolution_clock::now();
 }
 
 std::chrono::high_resolution_clock::duration Stopwatch::getDuration() {
