@@ -23,6 +23,7 @@ public:
 
     void draw(cimg_library::CImg<unsigned char>& canvas, const unsigned char color[3]);
     void next();
+    void reset();
     void clear();
 
     std::vector<bool>* operator[](unsigned int index);
@@ -47,6 +48,8 @@ private:
     void insertPattern(Grid pattern, Point location);
     void normalizePattern(Grid& pattern);
     void getPatternSize(Grid pattern, unsigned int& patternWidth, unsigned int& patternHeight);
+    Grid initialPattern;
+
 };
 
 

@@ -37,6 +37,11 @@ void GameBoard::draw(cimg_library::CImg<unsigned char>& canvas, const unsigned c
     }
 }
 
+void GameBoard::reset() {
+    clear();
+    initPattern(initialPattern, Point(width / 2, height / 2));
+}
+
 void GameBoard::clear() {
     for (unsigned int x = 0; x < board.size(); x++){
         for (unsigned int y = 0; y < board[x].size(); y++) {
@@ -121,6 +126,7 @@ void GameBoard::initRandom() {
 }
 
 void GameBoard::initPattern(Grid pattern, Point location, bool normalize) {
+    initialPattern = pattern;
     if (normalize)
         normalizePattern(pattern);
     insertPattern(pattern, location);

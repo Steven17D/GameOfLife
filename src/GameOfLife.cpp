@@ -81,11 +81,13 @@ void GameOfLife::showInfo(const GameBoard &gameBoard, cimg_library::CImg<unsigne
         drawLocation.shift(0, fontSize + textPaddingSize);
     }
 
-    std::map<std::string, std::string> controllers {
+    const std::map<std::string, std::string> controllers {
+            {"CLEAR",        "X"},
+            {"RESET",        "R"},
             {"FPS UP",       "NUM+"},
             {"FPS DOWN",     "NUM-"},
             {"STOP/START",   "SPACE"},
-            {"EXIT",         "ESC"},
+            {"EXIT",         "ESC"}
     };
 
     drawControllers(image, drawLocation, controllers, fontSize, textPaddingSize);

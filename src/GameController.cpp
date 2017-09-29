@@ -42,6 +42,12 @@ void GameController::KeyboardControl() {
         if (imgDisplay.is_keyC()) {
             showCenter = !showCenter;
         }
+        if (imgDisplay.is_keyX()) {
+            gameBoard.clear();
+        }
+        if (imgDisplay.is_keyR()) {
+            gameBoard.reset();
+        }
         if (imgDisplay.is_keyPADADD()) {
             fps++;
         }
