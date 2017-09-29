@@ -5,10 +5,12 @@
 #include <iostream>
 #include "GameController.h"
 
-GameController::GameController(cimg_library::CImgDisplay& imgDisplay,
+GameController::GameController(cimg_library::CImgDisplay &imgDisplay, GameBoard &gameBoard,
                                Stopwatch& stopwatch,
-                               bool& showCenter, unsigned short& fps) :
-        imgDisplay(imgDisplay), stopwatch(stopwatch), showCenter(showCenter), threadAlive(false), fps(fps) {}
+                               bool &showCenter, unsigned short &fps) :
+        imgDisplay(imgDisplay), gameBoard(gameBoard),
+        stopwatch(stopwatch), showCenter(showCenter),
+        threadAlive(false), fps(fps) {}
 
 GameController::~GameController() {
     threadAlive = false;
@@ -45,6 +47,12 @@ void GameController::KeyboardControl() {
         }
         if (imgDisplay.is_keyPADSUB() and fps > 1) {
             fps--;
+        }
+        if (imgDisplay.button() && imgDisplay.mouse_y() >= 0) {
+            const auto x = static_cast<unsigned short>(gameBoard.getWidth() * ((double)imgDisplay.mouse_y() / imgDisplay.width()));
+            const auto y = static_cast<unsigned short>(gameBoard.getHeight() * ((double)imgDisplay.mouse_x() / imgDisplay.height() ));
+
+            gameBoard(y, x, true);
         }
     }  // Mutex released
 }

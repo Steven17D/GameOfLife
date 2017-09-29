@@ -20,7 +20,7 @@ void GameOfLife::start() {
     // TODO add dialog for pattern choosing
     gameBoard.initPattern(Patterns::gosperGliderGun, SCREEN_MIDDLE_POINT);
 
-    GameController gameController(imgDisplay, stopwatch, showCenter, fps);
+    GameController gameController(imgDisplay, gameBoard, stopwatch, showCenter, fps);
     std::thread frameRateCalculator(&GameOfLife::calculateFrameRate, this);
     Stopwatch autoCorrectStopwatch;
 
@@ -31,16 +31,12 @@ void GameOfLife::start() {
 
     do {
         autoCorrectStopwatch.reset();
-        cimg_library::CImg<unsigned char> image((const unsigned int) imgDisplay.width(),
-                                                (const unsigned int) imgDisplay.height(),
-                                                1, 3, 1);
+        cimg_library::CImg<unsigned char> image(
+                (const unsigned int) imgDisplay.width(), (const unsigned int) imgDisplay.height(), 1, 3, 1);
         gameBoard.draw(image, purple);
         showInfo(gameBoard, image);
         if (showCenter) image.draw_circle(imgDisplay.width() / 2, imgDisplay.height() / 2, 1, red);
-
-        if (!stopwatch.isStopped())
-            gameBoard.next();
-
+        if (!stopwatch.isStopped()) gameBoard.next();
         imgDisplay.display(image);
 
         long long int millisecondsCount = (1000 / fps) - std::chrono::duration_cast<std::chrono::milliseconds>(autoCorrectStopwatch.getDuration()).count();

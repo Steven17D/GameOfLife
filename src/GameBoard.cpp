@@ -6,7 +6,6 @@
 #include <functional>
 #include <algorithm>
 #include "GameBoard.h"
-#include "Quadrangle.h"
 #include "Circle.h"
 
 using namespace cimg_library;
@@ -21,7 +20,7 @@ unsigned int GameBoard::getGeneration() const {
 
 void GameBoard::draw(cimg_library::CImg<unsigned char>& canvas, const unsigned char color[3]) {
     unsigned int wCount = width, hCount = height;
-    unsigned int displayW = (unsigned int) canvas.width(), displayH = (unsigned int) canvas.height();
+    auto displayW = (unsigned int) canvas.width(), displayH = (unsigned int) canvas.height();
     double paddingW = (double) displayW / (wCount + 1),
             paddingH = (double) displayH / (hCount + 1);
     double radius = ((paddingH > paddingW) ? paddingW : paddingH) / 2;
@@ -46,8 +45,8 @@ void GameBoard::clear() {
     }
 }
 
-vector<bool>* GameBoard::operator[](unsigned int index) {
-    return &board[index];
+std::vector<bool>* GameBoard::operator[](unsigned int index) {
+    return &board[ index];
 }
 
 bool GameBoard::operator()(unsigned int x, unsigned int y) {
@@ -61,17 +60,19 @@ void GameBoard::operator()(unsigned int x, unsigned int y, bool value) {
 void GameBoard::next() {
     Grid nextBoard(board);
     // TODO split work to threads
+    bool currentCell;
     for (unsigned int x = 0; x < board.size(); x++){
         for (unsigned int y = 0; y < board[x].size(); y++) {
             int liveNeighbors = countLiveNeighbors(x, y);
-            if (board[x][y] == DEAD && liveNeighbors == 3){
+            currentCell = board[x][y];
+            if (currentCell == DEAD && liveNeighbors == 3){
                 // A dead cell with exactly three live neighbors becomes a live cell (birth).
                 nextBoard[x][y] = LIVE;
-            } else if (board[x][y] == LIVE && (liveNeighbors == 2 || liveNeighbors == 3)) {
+            } else if (currentCell == LIVE && (liveNeighbors == 2 || liveNeighbors == 3)) {
                 // A live cell with two or three live neighbors stays alive (survival).
             } else {
                 // In all other cases, a cell dies or remains dead (overcrowding or loneliness).
-                if (board[x][y] == LIVE) {
+                if (currentCell == LIVE) {
                     nextBoard[x][y] = DEAD;
                 }
             }
@@ -84,13 +85,13 @@ void GameBoard::next() {
 
 int GameBoard::countLiveNeighbors(unsigned int x, unsigned int y) {
     unsigned short counter = 0;
-    vector<pair<unsigned int, unsigned int>> neighbors {
+    std::vector<std::pair<unsigned int, unsigned int>> neighbors {
             {x-1, y+1}, {x, y+1}, {x+1, y+1},
             {x-1, y},             {x+1, y},
             {x-1, y-1}, {x, y-1}, {x+1, y-1}
     };
 
-    for (pair<unsigned int, unsigned int> v : neighbors) {
+    for (std::pair<unsigned int, unsigned int> v : neighbors) {
         if (is_onBoard(v.first, v.second))
             counter += board[v.first][v.second]? 1 : 0;
     }
@@ -167,10 +168,18 @@ void GameBoard::getPatternSize(const Grid pattern, unsigned int &patternWidth, u
     patternWidth = pattern.size();
     patternHeight = 0;
 
-    for (auto row : pattern){
+    for (const auto &row : pattern){
         unsigned int rowWidth = row.size();
         if (rowWidth > patternHeight){
             patternHeight = row.size();
         }
     }
+}
+
+unsigned short GameBoard::getWidth() const {
+    return width;
+}
+
+unsigned short GameBoard::getHeight() const {
+    return height;
 }

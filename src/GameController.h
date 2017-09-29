@@ -10,10 +10,11 @@
 #include "mingw.thread.h"
 #include "mingw.mutex.h"
 #include "Stopwatch.h"
+#include "GameBoard.h"
 
 class GameController {
 public:
-    GameController(cimg_library::CImgDisplay &imgDisplay,
+    GameController(cimg_library::CImgDisplay &imgDisplay, GameBoard &gameBoard,
                    Stopwatch &stopwatch,
                    bool &showCenter, unsigned short &fps);
     ~GameController();
@@ -25,6 +26,7 @@ private:
     void KeyboardControl();
 
     cimg_library::CImgDisplay& imgDisplay;
+    GameBoard &gameBoard;
     Stopwatch &stopwatch;
     bool &showCenter, threadAlive;
     unsigned short &fps;

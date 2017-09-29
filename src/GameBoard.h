@@ -29,6 +29,9 @@ public:
     bool operator()(unsigned int x, unsigned int y);
     void operator()(unsigned int x, unsigned int y, bool value);
 
+    unsigned short getWidth() const;
+    unsigned short getHeight() const;
+
     void initFull();
     void initRandom();
     void initPattern(Grid pattern, Point location, bool normalize = true);
@@ -43,7 +46,7 @@ private:
     bool is_onBoard(unsigned int x, unsigned int y);
     void insertPattern(Grid pattern, Point location);
     void normalizePattern(Grid& pattern);
-    void getPatternSize(const Grid pattern, unsigned int& patternWidth, unsigned int& patternHeight);
+    void getPatternSize(Grid pattern, unsigned int& patternWidth, unsigned int& patternHeight);
 };
 
 
