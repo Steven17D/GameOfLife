@@ -15,6 +15,7 @@
 class GameOfLife {
 public:
     GameOfLife(unsigned short screenWidth, unsigned short screenHeight, unsigned short cellSize = 20, unsigned short fps = 24);
+    ~GameOfLife();
 
     void start();
 
@@ -23,7 +24,7 @@ private:
                          std::map<std::string, std::string> controllers, unsigned short fontSize = 26,
                          unsigned short textPaddingSize = 4);
     void showInfo(const GameBoard &gameBoard, cimg_library::CImg<unsigned char> &image);
-    void frameRateCounter(bool &threadAlive);
+    void calculateFrameRate();
 
     Stopwatch stopwatch;
     cimg_library::CImgDisplay imgDisplay;
@@ -31,7 +32,7 @@ private:
     GameBoard gameBoard;
     unsigned short fps;
     double realFps;
-
+    bool showCenter;
 };
 
 

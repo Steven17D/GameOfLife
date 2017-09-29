@@ -5,29 +5,28 @@
 #include "GameOfLife.h"
 #include "Common.hpp"
 
+#define SCREEN_MIDDLE_POINT Point(wCount/2, hCount/2)
+
 GameOfLife::GameOfLife(unsigned short screenWidth, unsigned short screenHeight, unsigned short cellSize, unsigned short fps)
         : imgDisplay(screenWidth, screenHeight, "Game Of Life", 3, true),
           wCount((const unsigned short) imgDisplay.width() / cellSize),
           hCount((const unsigned short) imgDisplay.height() / cellSize),
           gameBoard(wCount,hCount),
-          fps(fps) { }
+          fps(fps), showCenter(false) { }
+
+GameOfLife::~GameOfLife() = default;
 
 void GameOfLife::start() {
     // TODO add dialog for pattern choosing
-    Point middleScreen(wCount / 2, hCount / 2);
-    gameBoard.initPattern(Patterns::gosperGliderGun, middleScreen);
+    gameBoard.initPattern(Patterns::gosperGliderGun, SCREEN_MIDDLE_POINT);
 
-    bool threadAlive = true;
-    bool showCenter  = false;
-
-    GameController gameController(imgDisplay, stopwatch, showCenter, threadAlive, fps);
-    gameController.start();
-    stopwatch.start();
-
-    std::thread frameRateCounterThread(&GameOfLife::frameRateCounter, this, std::ref(threadAlive));
-    frameRateCounterThread.detach();
-
+    GameController gameController(imgDisplay, stopwatch, showCenter, fps);
+    std::thread frameRateCalculator(&GameOfLife::calculateFrameRate, this);
     Stopwatch autoCorrectStopwatch;
+
+    stopwatch.start();
+    gameController.start();
+    frameRateCalculator.detach();
     autoCorrectStopwatch.start();
 
     do {
@@ -48,8 +47,6 @@ void GameOfLife::start() {
         if (millisecondsCount > 1)
             std::this_thread::sleep_for(std::chrono::milliseconds(millisecondsCount));
     } while (!imgDisplay.is_closed());
-
-    threadAlive = false;
 }
 
 void GameOfLife::showInfo(const GameBoard &gameBoard, cimg_library::CImg<unsigned char> &image) {
@@ -122,12 +119,12 @@ void GameOfLife::drawControllers(cimg_library::CImg<unsigned char> &image, Point
     }
 }
 
-void GameOfLife::frameRateCounter(bool &threadAlive) {
+void GameOfLife::calculateFrameRate() {
     Stopwatch threadStopwatch;
     threadStopwatch.start();
     unsigned int millisecondsPassed;
     unsigned int framesPassed = gameBoard.getGeneration(), currentFrame;
-    while (threadAlive) {
+    while (!imgDisplay.is_closed()) {
         millisecondsPassed = (unsigned int) std::chrono::duration_cast<std::chrono::milliseconds>(threadStopwatch.getDuration()).count();
         millisecondsPassed = millisecondsPassed < 1 ? 1 : millisecondsPassed;
         threadStopwatch.reset();

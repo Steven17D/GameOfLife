@@ -14,20 +14,19 @@
 class GameController {
 public:
     GameController(cimg_library::CImgDisplay &imgDisplay,
-                   Stopwatch &stopwatch, bool &showCenter, bool &threadAlive,
-                   unsigned short &fps);
+                   Stopwatch &stopwatch,
+                   bool &showCenter, unsigned short &fps);
+    ~GameController();
 
     void start();
 
 private:
 
-    void KeyboardControl(cimg_library::CImgDisplay& imgDisplay ,
-                         Stopwatch& stopwatch, bool& showCenter, unsigned short& fps,
-                         bool& threadAlive);
+    void KeyboardControl();
 
     cimg_library::CImgDisplay& imgDisplay;
     Stopwatch &stopwatch;
-    bool &showCenter, &threadAlive;
+    bool &showCenter, threadAlive;
     unsigned short &fps;
 };
 
