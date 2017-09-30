@@ -1,2 +1,2 @@
 # Game Of Life
-![Game view](https://user-images.githubusercontent.com/22868816/31047290-c09cb3ee-a5bc-11e7-9fde-95080c89f13f.png)
+![](https://user-images.githubusercontent.com/22868816/31047349-acb7c0de-a5bd-11e7-889d-fcc021f677d4.gif)
