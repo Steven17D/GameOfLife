@@ -6,7 +6,7 @@ int main() {
     unsigned short width, height;
     GetDesktopResolution(width, height);
 
-    GameOfLife gameOfLife(width, height, 4);
+    GameOfLife gameOfLife(width, height);
     gameOfLife.start();
 
     return 0;

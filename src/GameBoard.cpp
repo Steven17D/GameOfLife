@@ -28,10 +28,9 @@ void GameBoard::draw(cimg_library::CImg<unsigned char>& canvas, const unsigned c
     for (size_t x = 0; x < board.size(); x++){
         for (size_t y = 0; y < board[x].size(); y++) {
             if (board[x][y]) {
-                Circle circle(
-                        Point((x * paddingW) + paddingW , (y * paddingH) + paddingH),
-                        radius);
-                circle.draw(canvas, color);
+                Circle(Point((x * paddingW) + paddingW ,
+                             (y * paddingH) + paddingH),
+                       radius).draw(canvas, color);
             }
         }
     }
